@@ -1,8 +1,12 @@
-#To obtain the MLED after having performed an optimization during the first part
-#Data  in Hyytiala.
-#Daniel Nadal-Sala, Rüdiger Grote, Benjamin Birami, Yakir Preisler, Eyal Rotenberg, Yann Salmon, Fedor Tatarinov, Dan Yakir, Nadine K. Ruehr
+#### Here we perform the optimization of the Alpha coefficients, and we end up obtaining the MLED for each day. (Hyytiala)
+#### NOTE there is a breaking point in the middle of the script, in order to avoid running the entire optimization each time the script runs. 
 
-# Functions
+#### Packages:
+
+library (BayesianTools);library (DEoptim); library(dplyr); library(ggplot2) 
+library(gridExtra); library(ggExtra);library(cowplot)
+
+##### Functions
 
 load_object <- function(file) {
   tmp <- new.env()
@@ -23,9 +27,6 @@ Month<-NULL
 for(i in 1:length(Modeled$Date)){
   Month[i]<-as.numeric(strsplit(as.character(Modeled$Date[i]),"/")[[1]][1])
 }
-
-library (BayesianTools)
-library (DEoptim)
 
 Time_step<-15
 RefGPP<-Observed$ModeledIdeal
@@ -128,8 +129,6 @@ PARLimit<-PARfactorChain
 
 ObservedLS<-data.frame(TLimitObs=TLimit,DLimitObs=DLimit,SWCLimitObs=SWCLimit,PARLimitObs=PARLimit,GPPMod = GPP_modeled)
 
-########################
-#######################
 #####################
 #Now for the modeled part
 
@@ -243,12 +242,6 @@ Data<-list(Observed=ObservedLS,Modeled=ModeledLS,Month=Month)
 ##########################
 ###########To plot
 
-library(dplyr)
-library(ggplot2)
-library(gridExtra)
-library(ggExtra)
-library(cowplot)
-
 Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Hyytiala_CombinedLimitations.rda")
 
 #for this figure I will get the main environmental driver for each day:
@@ -305,9 +298,6 @@ DataFeed<-data.frame(Month = as.factor(rep(1:12,4)),
 PlotObserved<-ggplot(data=DataFeed, aes(x=Month, y=Limit, fill=Driver)) +
   geom_bar(stat="identity")+
   scale_fill_manual(values=c("tomato","grey50","wheat","steelblue"))+
-  #geom_text(aes(y=label_ypos, label=Limit), vjust=1.6, 
-  #          color="white", size=3.5)+
-  #geom_hline(0)+
   theme_minimal()+
   labs(y = "Days (fraction)", 
        x = "Month",family="sans")+
@@ -365,9 +355,6 @@ DataFeed<-data.frame(Month = as.factor(rep(1:12,4)),
 PlotModeled<-ggplot(data=DataFeed, aes(x=Month, y=Limit, fill=Driver)) +
   geom_bar(stat="identity")+
   scale_fill_manual(values=c("tomato","grey50","wheat","steelblue"))+
-  #geom_text(aes(y=label_ypos, label=Limit), vjust=1.6, 
-  #          color="white", size=3.5)+
-  #geom_hline(0)+
   theme_minimal()+
   labs(y = "Days (fraction)", 
        x = "Month",family="sans")+
