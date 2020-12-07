@@ -6,10 +6,10 @@ load_object <- function(file) {
 
 #################################################################
 
-Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_CombinedLimitations.rda")
+Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_CombinedLimitations.rda")
 
-Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Observed.rda")
-Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_LDNDC.rda")
+Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Observed.rda")
+Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_LDNDC.rda")
 
 a<-which(Data$Month>=4 & Data$Month<=5 & Modeled$SWC>18)
 Na<-c(which(is.na(Observed$GPP)),which(is.na(Observed$D)))
