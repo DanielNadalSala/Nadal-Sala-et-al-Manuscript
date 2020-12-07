@@ -15,7 +15,7 @@ load_object <- function(file) {
 
 #####Code
 
-DataFrameJoint<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Observed.rda")
+DataFrameJoint<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Observed.rda")
 
 Dataset<-DataFrameJoint
 
