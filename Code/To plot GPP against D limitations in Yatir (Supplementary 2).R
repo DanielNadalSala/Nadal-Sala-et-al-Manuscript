@@ -1,3 +1,10 @@
+#This plot compares the Observed and Simulated vapor pressure deficit limitations over GPP
+#Data  in Yatir, both Observed and Simulated.
+
+#Packages:
+library(dplyr);library(ggplot2)
+
+#Functions
 load_object <- function(file) {
   tmp <- new.env()
   load(file = file, envir = tmp)
@@ -25,9 +32,6 @@ DataMod<-data.frame(GPP=Modeled$GPP[a],D=Modeled$D[a],DLimit=Data$Modeled$DLimit
 Type<-c(rep("Obs",length(a)),rep("Mod",length(a)))
 NewData<-rbind(DataObs,DataMod)
 NewData$Type<-Type
-
-library(dplyr)
-library(ggplot2)
 
 ggplot(NewData,aes(x=D,y=GPP,shape=Type))+
   geom_point(aes(size=DLimit,fill=Type))+
