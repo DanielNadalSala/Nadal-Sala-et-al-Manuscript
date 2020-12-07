@@ -1,6 +1,10 @@
 #Obtain the response to the environmental drivers and the individual limitation strength for each day
 #Data  in Hyytiala.
-#Daniel Nadal-Sala, Rüdiger Grote, Benjamin Birami, Yakir Preisler, Eyal Rotenberg, Yann Salmon, Fedor Tatarinov, Dan Yakir, Nadine K. Ruehr
+#Daniel Nadal-Sala, RÃ¼diger Grote, Benjamin Birami, Yakir Preisler, Eyal Rotenberg, Yann Salmon, Fedor Tatarinov, Dan Yakir, Nadine K. Ruehr
+
+####Packages:
+
+library (randomForest); library(ggplot2); library(cowplot); library(caret)
 
 # Functions
 
@@ -14,13 +18,6 @@ load_object <- function(file) {
 
 Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Hyytiala_Observed.rda")
 Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Hyytiala_LDNDC.rda")
-
-
-library (randomForest)
-library(ggplot2)
-library(cowplot)
-library(caret) #This is used to predict
-
 
 #We remove the NA's in the entire Dataset. With unique we are removing just one of the registers for each NA (repeated NA's at the same row)
 DataFillObs<-Observed
@@ -93,7 +90,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedSWC>quantile(PredictedSWC,0.90))
   
@@ -149,7 +146,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedPAR>quantile(PredictedPAR,0.9))
   
@@ -205,7 +202,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedD>=quantile(PredictedD,0.90))
   
@@ -262,7 +259,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedT>quantile(PredictedT,0.90))
   
@@ -384,8 +381,8 @@ DataFillMod<-data.frame(Tmean=DataFillMod$Tmean,PAR=DataFillMod$PAR,FSWC30=DataF
 
 set.seed(13) #This fixes the random values to a controlled ones
 
-#We use the 70% of data to create the model, and the 30% for validate it.
-Sample<-sample(2,nrow(DataFillMod),replace=TRUE,prob=c(0.7,0.3))
+#We use the 75% of data to create the model, and the 25% for validate it.
+Sample<-sample(2,nrow(DataFillMod),replace=TRUE,prob=c(0.75,0.25))
 Train<-DataFillMod[which(Sample==1),]
 Validate<-DataFillMod[which(Sample==2),]
 
@@ -439,7 +436,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedSWC>quantile(PredictedSWC,0.90))
   
@@ -495,7 +492,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedPAR>quantile(PredictedPAR,0.9))
   
@@ -551,7 +548,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedD>=quantile(PredictedD,0.90))
   
@@ -608,7 +605,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedT>quantile(PredictedT,0.90))
   
@@ -741,7 +738,7 @@ PlotCenter<- ggplot(ModeledResponse, aes(x=Tstep, y=RelativePredictedT)) +
   xlim(Min,Max)+
   geom_line(aes(x=ObservedResponse$Tstep,y=ObservedResponse$RelativePredictedT),col="steelblue",size=2)+
   labs(y = expression(GPP~'/'~GPP[max]),
-  x = "T (°C)",size=6, family="sans")+
+  x = "T (Â°C)",size=6, family="sans")+
   theme(axis.text.x = element_text(hjust = 1, size=20,color="black",family="sans"))+
   theme(axis.text.y = element_text(hjust = 1, size=20,color="black",family="sans"))+
   theme(axis.title = element_text ( size=20,color="black",family="sans"))
