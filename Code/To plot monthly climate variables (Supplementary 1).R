@@ -1,21 +1,23 @@
-library(dplyr)
-library(ggplot2)
-library(gridExtra)
-library(ggExtra)
-library(cowplot)
+#This script plots the figure with monthly average climate values.
+#Data  in Yatir, both Observed and Simulated.
 
+#Load packages:
 
-Yatir<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Observed.rda")
+library(dplyr);library(ggplot2);library(gridExtra);library(ggExtra);library(cowplot)
+
+#Load the data
+Hyytiala<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Hyytiala_Observed.rda")
+Yatir<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Observed.rda")
+
+#Run the script
+
 Yatir$Month<-rep(c(rep(1,31),rep(2,28),rep(3,31),rep(4,30),rep(5,31),rep(6,30),
                    rep(7,31),rep(8,31),rep(9,30),rep(10,31),rep(11,30),rep(12,31)),3)
-
-Hyytiala<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Hyytiala_Observed.rda")
 
 Hyytiala$Month<-c(rep(1,31),rep(2,29),rep(3,31),rep(4,30),rep(5,31),rep(6,30),
            rep(7,31),rep(8,31),rep(9,30),rep(10,31),rep(11,30),rep(12,31),
          rep(c(rep(1,31),rep(2,28),rep(3,31),rep(4,30),rep(5,31),rep(6,30),
                rep(7,31),rep(8,31),rep(9,30),rep(10,31),rep(11,30),rep(12,31)),2))
-
 
 MonthYatir<-Yatir%>%
   group_by(Month)%>%
@@ -43,13 +45,12 @@ CombinedPlot<-rbind(MonthYatir,MonthHyytiala)
 
 CombinedPlot$Plot<-c(rep("Yatir",12),rep("Hyytiala",12))
 
-
   Tplot<-ggplot(CombinedPlot,aes(x=Month))+
   theme_minimal()+
   geom_line(aes(y=MeanT,color=Plot),size=1.5)+
   scale_color_manual(values=c("steelblue","tomato"))+
   geom_ribbon(aes(ymin=MeanT-SDT, ymax=MeanT+SDT, color=Plot), alpha=0.2,linetype="blank")+
-    labs(y = "Temperature (°C)", 
+    labs(y = "Temperature (Â°C)", 
     x = "Month",family="sans")+
     theme(axis.text.x = element_text(hjust = 1, size=14,color="black",family="sans"))+
     scale_x_continuous(breaks=seq(1,12,1))+
@@ -100,10 +101,4 @@ CombinedPlot$Plot<-c(rep("Yatir",12),rep("Hyytiala",12))
     theme(axis.title.y = element_text (size=16,color="black",family="sans"))+ 
     theme(legend.position = "none")
   
-  plot_grid(Tplot, Dplot,SWCplot,PARplot, align = "v", nrow = 2)
-
-
-
-
-
-  
+  plot_grid(Tplot, Dplot,SWCplot,PARplot, align = "v", nrow = 2) 
