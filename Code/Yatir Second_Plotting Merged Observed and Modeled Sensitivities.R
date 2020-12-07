@@ -379,8 +379,8 @@ DataFillMod<-data.frame(Tmean=DataFillMod$Tmean,PAR=DataFillMod$PAR,FSWC30=DataF
 
 set.seed(13) #This fixes the random values to a controlled ones
 
-#We use the 70% of data to create the model, and the 30% for validate it.
-Sample<-sample(2,nrow(DataFillMod),replace=TRUE,prob=c(0.7,0.3))
+#We use the 75% of data to create the model, and the 25% for validate it.
+Sample<-sample(2,nrow(DataFillMod),replace=TRUE,prob=c(0.75,0.25))
 Train<-DataFillMod[which(Sample==1),]
 Validate<-DataFillMod[which(Sample==2),]
 
@@ -434,7 +434,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedSWC>quantile(PredictedSWC,0.90))
   
@@ -490,7 +490,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedPAR>quantile(PredictedPAR,0.9))
   
@@ -546,7 +546,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedD>=quantile(PredictedD,0.90))
   
@@ -603,7 +603,7 @@ repeat{
   }
   
   ###############
-  #First control: We will take only the higher values, so we will sample the 50% of the data
+  #First control: We will take only the higher values, so we will sample the 90% of the data
   
   a1<-which(PredictedT>quantile(PredictedT,0.90))
   
