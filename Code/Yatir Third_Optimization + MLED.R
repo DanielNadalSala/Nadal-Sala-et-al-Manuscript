@@ -1,3 +1,12 @@
+#### Here we perform the optimization of the Alpha coefficients, and we end up obtaining the MLED for each day.
+#### NOTE there is a breaking point in the middle of the script, in order to avoid running the entire optimization each time the script runs. 
+
+#### Packages:
+
+library (BayesianTools); library (DEoptim);library(dplyr)
+library(ggplot2);library(gridExtra);library(ggExtra);library(cowplot)
+
+#### Functions:
 load_object <- function(file) {
   tmp <- new.env()
   load(file = file, envir = tmp)
@@ -9,17 +18,14 @@ load_object <- function(file) {
 #First part: To obtain the alpha coefficients. If wanted, it can be skipt to the second part
 #as we provide the calibrated values used in the analysis in a sepparated file.
 
-Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Observed_Limitations.rda")
-Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Modeled_Limitations.rda")
+Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Observed_Limitations.rda")
+Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Modeled_Limitations.rda")
 
 Month<-NULL
 
 for(i in 1:length(Modeled$Date)){
   Month[i]<-as.numeric(strsplit(as.character(Modeled$Date[i]),"/")[[1]][1])
 }
-
-library (BayesianTools)
-library (DEoptim)
 
 Time_step<-15
 RefGPP<-Observed$ModeledIdeal
@@ -72,15 +78,12 @@ for (i in 1:length(ObsGPP)){
   
 }
 
-
-
 GPP_modeled<-NULL
 TfactorChain<-NULL
 DfactorChain<-NULL
 SWCfactorChain<-NULL
 PARfactorChain<-NULL
 GPP_observed<-NULL
-
 
 for (i in 1:length(RefGPP)){
   
@@ -122,8 +125,6 @@ PARLimit<-PARfactorChain
 
 ObservedLS<-data.frame(TLimitObs=TLimit,DLimitObs=DLimit,SWCLimitObs=SWCLimit,PARLimitObs=PARLimit,GPPMod = GPP_modeled)
 
-########################
-#######################
 #####################
 #Now for the modeled part
 
@@ -228,8 +229,6 @@ ModeledLS<-data.frame(TLimitObs=TLimit,DLimitObs=DLimit,SWCLimitObs=SWCLimit,PAR
 
 Data<-list(Observed=ObservedLS,Modeled=ModeledLS,Month=Month)
 
-#save(Data,file="C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_CombinedLimitations.rda")
-
 #############################################
 #Here it reads the data already processed via optimization and saved in the previous step.
 #It includes both the Observed and the Simulated data.
@@ -237,13 +236,7 @@ Data<-list(Observed=ObservedLS,Modeled=ModeledLS,Month=Month)
 ##########################
 ###########To plot
 
-library(dplyr)
-library(ggplot2)
-library(gridExtra)
-library(ggExtra)
-library(cowplot)
-
-Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_CombinedLimitations.rda")
+Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_CombinedLimitations.rda")
 
 #for this figure I will get the main environmental driver for each day:
 
@@ -299,9 +292,6 @@ DataFeed<-data.frame(Month = as.factor(rep(1:12,4)),
 PlotObserved<-ggplot(data=DataFeed, aes(x=Month, y=Limit, fill=Driver)) +
   geom_bar(stat="identity")+
   scale_fill_manual(values=c("tomato","grey50","wheat","steelblue"))+
-  #geom_text(aes(y=label_ypos, label=Limit), vjust=1.6, 
-  #          color="white", size=3.5)+
-  #geom_hline(0)+
   theme_minimal()+
   labs(y = "Days (fraction)", 
        x = "Month",family="sans")+
@@ -359,9 +349,6 @@ DataFeed<-data.frame(Month = as.factor(rep(1:12,4)),
 PlotModeled<-ggplot(data=DataFeed, aes(x=Month, y=Limit, fill=Driver)) +
   geom_bar(stat="identity")+
   scale_fill_manual(values=c("tomato","grey50","wheat","steelblue"))+
-  #geom_text(aes(y=label_ypos, label=Limit), vjust=1.6, 
-  #          color="white", size=3.5)+
-  #geom_hline(0)+
   theme_minimal()+
   labs(y = "Days (fraction)", 
        x = "Month",family="sans")+
