@@ -5,7 +5,7 @@
 
 library (randomForest);library(ggplot2);library(cowplot);library(caret)
 
-#### Functions used:
+#### Functions:
 
 #Function to account for temporal autocorrelation in linear effects.
 LinearRegressionNoTempAutocorrelation<-function(x,y,lag.max=30,iterations=1000){
