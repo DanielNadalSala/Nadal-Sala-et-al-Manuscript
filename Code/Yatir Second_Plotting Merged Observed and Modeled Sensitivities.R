@@ -1,3 +1,11 @@
+#This Script analyzes the Observed and Simulated values in Yatir, and generates the sensitivity of GPP to all environmental drivers.
+
+####Packages:
+
+library (randomForest);library(ggplot2);library(cowplot);library(caret)
+library(ggExtra);library(dplyr);library(gridExtra)
+
+####Functions:
 load_object <- function(file) {
   tmp <- new.env()
   load(file = file, envir = tmp)
@@ -6,15 +14,8 @@ load_object <- function(file) {
 
 #################################################################
 
-Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Observed.rda")
-Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_LDNDC.rda")
-
-
-library (randomForest)
-library(ggplot2)
-library(cowplot)
-library(caret) #This is used to predict
-
+Observed<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Observed.rda")
+Modeled<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_LDNDC.rda")
 
 #We remove the NA's in the entire Dataset. With unique we are removing just one of the registers for each NA (repeated NA's at the same row)
 DataFillObs<-Observed
@@ -712,12 +713,6 @@ ModeledResponse<-ModeledResponseToEnvironment
 ModeledLimitations<-data.frame(SWCLimitFraction,DLimitFraction,TLimitFraction,PARLimitFraction)
 
 #Now we have the information, so we are able to plot this
-
-library(ggplot2)
-library(gridExtra)
-library(ggExtra)
-library(cowplot)
-library(dplyr)
   
 Min<-min(Observed$Tmean,na.rm=T)
 Max<-max(Observed$Tmean,na.rm=T)
@@ -732,7 +727,7 @@ PlotCenter<- ggplot(ModeledResponse, aes(x=Tstep, y=RelativePredictedT)) +
   xlim(Min,Max)+
   geom_line(aes(x=ObservedResponse$Tstep,y=ObservedResponse$RelativePredictedT),col="steelblue",size=2)+
   labs(y = expression(GPP~'/'~GPP[max]),
-  x = "T (°C)",size=6, family="sans")+
+  x = "T (Â°C)",size=6, family="sans")+
   theme(axis.text.x = element_text(hjust = 1, size=20,color="black",family="sans"))+
   theme(axis.text.y = element_text(hjust = 1, size=20,color="black",family="sans"))+
   theme(axis.title = element_text ( size=20,color="black",family="sans"))
