@@ -1,9 +1,12 @@
-#Apply the Random Forest (CART) algorithm, and then to plot the results, both for the time-series and the comparison against measurements
+#Apply the Random Forest algorithm, and then to plot the results, both for the time-series and the comparison against measurements
 #Observed data in Yatir.
-#Daniel Nadal-Sala, Rüdiger Grote, Benjamin Birami, Yakir Preisler, Eyal Rotenberg, Yann Salmon, Fedor Tatarinov, Dan Yakir, Nadine K. Ruehr
 
-################################################################
+#### Load packages:
+
+library (randomForest);library(ggplot2);library(cowplot);library(caret)
+
 #### Functions used:
+
 #Function to account for temporal autocorrelation in linear effects.
 LinearRegressionNoTempAutocorrelation<-function(x,y,lag.max=30,iterations=1000){
   
@@ -127,14 +130,11 @@ load_object <- function(file) {
 
 #####################################################
 
+####Load the input data:
+
+DataFrameJoint<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_LDNDC.rda")
+
 #Here we run the RandomForest on the data and we analyze it.
-
-library (randomForest)
-library(ggplot2)
-library(cowplot)
-library(caret) #This is used to predict
-
-DataFrameJoint<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_LDNDC.rda")
 
 #firstly we prepare the data
 
