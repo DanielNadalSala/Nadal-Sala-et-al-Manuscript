@@ -1,6 +1,11 @@
-#Apply the Random Forest (CART) algorithm, and then to plot the results, both for the time-series and the comparison against measurements
-#Observed data in Yatir.
-#Daniel Nadal-Sala, Rüdiger Grote, Benjamin Birami, Yakir Preisler, Eyal Rotenberg, Yann Salmon, Fedor Tatarinov, Dan Yakir, Nadine K. Ruehr
+#Apply the Random Forest algorithm, and then to plot the results, both for the time-series and the comparison against simulated values
+#Simulated data in Yatir.
+
+#### Load packages:
+
+library (randomForest);library(ggplot2);library(cowplot);library(caret)
+
+#### Functions:
 
 ################################################################
 #### Functions used:
@@ -131,12 +136,10 @@ library(ggplot2)
 library(cowplot)
 library(caret)
 
-#firstly we prepare the data
+####Data:
+Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yatir_Observed.rda")
 
-#Settings: Node size = 7 (default)
-#Breiman, L. (2001), Random Forests, Machine Learning 45(1), 5-32.
-
-Data<-load_object("C:/Users/sala-d/Desktop/Yatir Forest Paper/Data/Yakir_Observed.rda")
+####Running the script:
 
 #We remove the NA's in the entire Dataset. With unique we are removing just one of the registers for each NA (repeated NA's at the same row)
 DataFill<-Data
@@ -152,22 +155,20 @@ DataFill<-data.frame(Tmean=DataFill$Tmean,PAR=DataFill$PAR,FSWC30=DataFill$FSWC3
 set.seed(5) #This fixes the random values to a controlled ones
 
 #We use the 75% of data to create the model, and the 25% for validate it.
+
+
 Sample<-sample(2,nrow(DataFill),replace=TRUE,prob=c(0.57,0.25))
 Train<-DataFill[which(Sample==1),]
 Validate<-DataFill[which(Sample==2),]
 
 Model<-randomForest(GPP~.,ntree=1000,data=Train,mtry=2, importance=1) 
-#mtry is the number of variables used for each classification
+#mtry is the number of variables used for each classification. We set it as sqrt(n), where n are the number of classificatory variables (4 in our study). Node size = 7 (default)
+#Breiman, L. (2001), Random Forests, Machine Learning 45(1), 5-32.
 
 Predicted<-predict(Model,Validate)
-
 #In order to check for the relative importance of the different variables:
 
 ########################################################
-#IncNodePurity means that: Increase in node purity is analogous to Gini-based importance, 
-#and is calculated based on the reduction in sum of squared errors whenever 
-#a variable is chosen to split.
-
 #% increase in MSE is the percent increase in MSE if a variable is set aside in the model development.
 #i.e. variables with higher specific weight imply higher %MSE increases.
 
@@ -175,7 +176,6 @@ importance(Model, type=1)
 importance(Model)
 varImpPlot(Model,type=1)
 
-##############################################################################################
 ##############################################################################################
 ##### Figure 1
 
